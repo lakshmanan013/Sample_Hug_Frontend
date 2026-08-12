@@ -37,7 +37,7 @@ function PetForm({item,owners,onClose,onSaved}) {
   const edit=!!item
   const save=async e=>{e.preventDefault();setError('');try{
     const body={name:form.name,breed:form.breed,age:Number(form.age)}
-    const data=edit?await petApi.pets.update(item.PetId,form.ownerId,body):await petApi.pets.create(form.ownerId,body)
+    const data=edit?await petApi.pets.update(item.petId,form.ownerId,body):await petApi.pets.create(form.ownerId,body)
     onSaved(data)
   }catch(err){setError(err.message)}}
   return <Modal title={edit?'Edit Pet':'Add Pet'} onClose={onClose}>
@@ -52,7 +52,7 @@ function PetForm({item,owners,onClose,onSaved}) {
 }
 
 function AppointmentForm({item,pets,onClose,onSaved}) {
-  const [form,setForm]=useState(item?{appointmentDate:item.appointmentDate,appointmentType:item.appointmentType,status:item.status,petId:item.pet?.PetId??''}:emptyAppointment); const [error,setError]=useState('')
+  const [form,setForm]=useState(item?{appointmentDate:item.appointmentDate,appointmentType:item.appointmentType,status:item.status,petId:item.pet?.petId??''}:emptyAppointment); const [error,setError]=useState('')
   const edit=!!item
   const save=async e=>{e.preventDefault();setError('');try{
     const body={appointmentDate:form.appointmentDate,appointmentType:form.appointmentType,status:form.status}
@@ -62,7 +62,7 @@ function AppointmentForm({item,pets,onClose,onSaved}) {
   return <Modal title={edit?'Edit Appointment':'Add Appointment'} onClose={onClose}>
     {error&&<div className="alert">{error}</div>}
     <form onSubmit={save}><div className="form-grid">
-      <Field label="Pet"><select required value={form.petId} onChange={e=>setForm({...form,petId:e.target.value})}><option value="">Select pet</option>{pets.map(p=><option key={p.PetId} value={p.PetId}>{p.name} (#{p.PetId})</option>)}</select></Field>
+      <Field label="Pet"><select required value={form.petId} onChange={e=>setForm({...form,petId:e.target.value})}><option value="">Select pet</option>{pets.map(p=><option key={p.petId} value={p.petId}>{p.name} (#{p.petId})</option>)}</select></Field>
       <Field label="Date"><input required type="date" value={form.appointmentDate||''} onChange={e=>setForm({...form,appointmentDate:e.target.value})}/></Field>
       <Field label="Type"><input required value={form.appointmentType} onChange={e=>setForm({...form,appointmentType:e.target.value})}/></Field>
       <Field label="Status"><select value={form.status} onChange={e=>setForm({...form,status:e.target.value})}><option>SCHEDULED</option><option>COMPLETED</option><option>CANCELLED</option></select></Field>
@@ -123,8 +123,8 @@ function Dashboard({owners,pets,appointments}){return <div className="grid">
 </div>}
 
 function OwnerTable({data,onEdit,onDelete}){return <Table headers={['ID','Name','Email','Phone','Address','Actions']} rows={data.map(o=>[o.ownerId,o.name,o.email,o.phone,o.address,<Actions edit={()=>onEdit(o)} del={()=>onDelete(o.ownerId)}/>])}/>}
-function PetTable({data,onEdit,onDelete}){return <Table headers={['ID','Name','Breed','Age','Owner','Actions']} rows={data.map(p=>[p.PetId,p.name,p.breed,p.age,p.owner?.name||`Owner #${p.owner?.ownerId??'-'}`,<Actions edit={()=>onEdit(p)} del={()=>onDelete(p.PetId)}/>])}/>}
-function AppointmentTable({data,onEdit,onDelete}){return <Table headers={['ID','Pet','Date','Type','Status','Actions']} rows={data.map(a=>[a.appointmentId,a.pet?.name||`Pet #${a.pet?.PetId??'-'}`,a.appointmentDate,a.appointmentType,<span className="badge">{a.status}</span>,<Actions edit={()=>onEdit(a)} del={()=>onDelete(a.appointmentId)}/>])}/>}
+function PetTable({data,onEdit,onDelete}){return <Table headers={['ID','Name','Breed','Age','Owner','Actions']} rows={data.map(p=>[p.petId,p.name,p.breed,p.age,p.owner?.name||`Owner #${p.owner?.ownerId??'-'}`,<Actions edit={()=>onEdit(p)} del={()=>onDelete(p.petId)}/>])}/>}
+function AppointmentTable({data,onEdit,onDelete}){return <Table headers={['ID','Pet','Date','Type','Status','Actions']} rows={data.map(a=>[a.appointmentId,a.pet?.name||`Pet #${a.pet?.petId??'-'}`,a.appointmentDate,a.appointmentType,<span className="badge">{a.status}</span>,<Actions edit={()=>onEdit(a)} del={()=>onDelete(a.appointmentId)}/>])}/>}
 function Actions({edit,del}){return <div className="actions"><button className="btn btn-secondary" onClick={edit}>Edit</button><button className="btn btn-danger" onClick={del}>Delete</button></div>}
 function Table({headers,rows}){if(!rows.length)return <div className="card empty">No records found.</div>;return <div className="table-wrap"><table className="table"><thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>{rows.map((r,i)=><tr key={i}>{r.map((c,j)=><td key={j}>{c}</td>)}</tr>)}</tbody></table></div>}
 
