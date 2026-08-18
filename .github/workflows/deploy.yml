@@ -34,6 +34,7 @@ jobs:
             echo "Starting new container..."
             docker run -d \
               --name hughub-pet-frontend \
+              --add-host=host.docker.internal:host-gateway \
               -p 3000:80 \
               hughub-pet-frontend
 
