@@ -93,7 +93,7 @@ const [modal,setModal]=useState(null),[error,setError]=useState(''),[success,set
   const remove=async(type,id)=>{if(!confirm('Delete this record?'))return;try{if(type==='owner')await petApi.owners.remove(id);if(type==='pet')await petApi.pets.remove(id);if(type==='appointment')await petApi.appointments.remove(id);await load()}catch(e){setError(e.message)}}
 
   return <div className="app">
-    <aside className={`sidebar ${menu?'open':''}`}><div className="brand">Zenv<span>Pet Healthcare</span></div><nav className="nav">
+    <aside className={`sidebar ${menu?'open':''}`}><div className="brand">Zenve<span>Pet Healthcare</span></div><nav className="nav">
       {['Dashboard','Owners','Pets','Appointments'].map(x=><button key={x} className={page===x?'active':''} onClick={()=>{setPage(x);setMenu(false)}}>{x}</button>)}
     </nav></aside>
     <main className="main">
